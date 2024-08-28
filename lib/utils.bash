@@ -44,6 +44,7 @@ get_platform() {
 	fi
 }
 
+# from https://stackoverflow.com/questions/4023830/how-to-compare-two-strings-in-dot-separated-version-format-in-bash
 vercomp() {
   if [[ $1 == $2 ]]; then
     return 0
