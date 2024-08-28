@@ -44,14 +44,42 @@ get_platform() {
 	fi
 }
 
+vercomp() {
+  if [[ $1 == $2 ]]; then
+    return 0
+  fi
+  local IFS=.
+  local i ver1=($1) ver2=($2)
+  # fill empty fields in ver1 with zeros
+  for ((i = ${#ver1[@]}; i < ${#ver2[@]}; i++)); do
+    ver1[i]=0
+  done
+  for ((i = 0; i < ${#ver1[@]}; i++)); do
+    if ((10#${ver1[i]:=0} > 10#${ver2[i]:=0})); then
+      return 1
+    fi
+    if ((10#${ver1[i]} < 10#${ver2[i]})); then
+      return 2
+    fi
+  done
+  return 0
+}
+
 get_arch() {
-	if [[ $(uname -m) == "x86_64" ]]; then
-		  echo "amd64"
-	elif [[ $(uname -m) == "arm64" ]]; then
-		  echo "arm64"
-	else
-		  echo >&2 'Architecture not supported' && exit 1
-	fi
+  local version="$1"
+  if [[ $(uname -m) == "x86_64" ]]; then
+    vercomp $version "0.45.0"
+    case $? in
+      0) echo "x86_64" ;;
+      1) echo "amd64" ;;
+      2) echo "x86_64" ;;
+      *) echo "amd64" ;;
+    esac
+  elif [[ $(uname -m) == "arm64" ]]; then
+    echo "arm64"
+  else
+    echo >&2 'Architecture not supported' && exit 1
+  fi
 }
 
 download_release() {
