@@ -12,7 +12,7 @@ mkdir -p "$ASDF_DOWNLOAD_PATH"
 
 platform=$(get_platform)
 
-arch=$(get_arch $ASDF_INSTALL_VERSION)
+arch=$(get_arch "$ASDF_INSTALL_VERSION")
 
 release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME-$ASDF_INSTALL_VERSION.tar.gz"
 
